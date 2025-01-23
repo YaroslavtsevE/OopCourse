@@ -77,6 +77,7 @@ public class Range {
                 intervalsArray[0] = intervalsIntersection;
             }
         }
+
         return intervalsArray;
     }
 }
