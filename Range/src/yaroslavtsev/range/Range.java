@@ -32,4 +32,51 @@ public class Range {
     public boolean isInside(double number) {
         return from <= number && number <= to;
     }
+
+    public Range getIntersectionInterval(Range firstRange, Range secondRange) {
+        double intersectionIntervalFrom;
+        double intersectionIntervalTo;
+        Range intersectionInterval;
+
+        if (firstRange.isInside(secondRange.getFrom()) && firstRange.isInside(secondRange.getTo())) {
+            intersectionIntervalFrom = secondRange.getFrom();
+            intersectionIntervalTo = secondRange.getTo();
+            intersectionInterval = new Range(intersectionIntervalFrom, intersectionIntervalTo);
+        } else if (firstRange.isInside(secondRange.getFrom()) && firstRange.isInside(secondRange.getTo())) {
+            intersectionIntervalFrom = firstRange.getFrom();
+            intersectionIntervalTo = firstRange.getTo();
+            intersectionInterval = new Range(intersectionIntervalFrom, intersectionIntervalTo);
+        } else intersectionInterval = null;
+
+        return intersectionInterval;
+    }
+
+    public Range[] getIntervalsIntersection(Range firstRange, Range secondRange) {
+        Range[] intervalsArray;
+
+        if (getIntersectionInterval(firstRange, secondRange) == null) {
+            intervalsArray = new Range[2];
+            intervalsArray[0] = firstRange;
+            intervalsArray[1] = secondRange;
+        } else {
+            intervalsArray = new Range[1];
+            Range intervalsIntersection;
+
+            if (firstRange.getFrom() <= secondRange.getFrom()) {
+                if (firstRange.getTo() >= secondRange.getTo()) {
+                    intervalsIntersection = new Range(firstRange.getFrom(), firstRange.getTo());
+                } else {
+                    intervalsIntersection = new Range(firstRange.getFrom(), secondRange.getTo());
+                }
+                intervalsArray[0] = intervalsIntersection;
+            } else if (firstRange.getTo() >= secondRange.getTo()) {
+                intervalsIntersection = new Range(secondRange.getFrom(), firstRange.getTo());
+                intervalsArray[0] = intervalsIntersection;
+            } else {
+                intervalsIntersection = new Range(secondRange.getFrom(), secondRange.getTo());
+                intervalsArray[0] = intervalsIntersection;
+            }
+        }
+        return intervalsArray;
+    }
 }
