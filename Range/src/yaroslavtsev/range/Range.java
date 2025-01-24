@@ -3,6 +3,7 @@ package yaroslavtsev.range;
 public class Range {
     private double from;
     private double to;
+    private Range[] intervalsArray;
 
     public Range(double from, double to) {
         this.from = from;
@@ -29,6 +30,14 @@ public class Range {
         return to - from;
     }
 
+    public void setIntervalsArray(Range[] intervalsArray) {
+        this.intervalsArray = intervalsArray;
+    }
+
+    public Range[] getIntervalsArray() {
+        return intervalsArray;
+    }
+
     public boolean isInside(double number) {
         return from <= number && number <= to;
     }
@@ -52,7 +61,6 @@ public class Range {
     }
 
     public Range[] getIntervalsIntersection(Range firstRange, Range secondRange) {
-        Range[] intervalsArray;
 
         if (getIntersectionInterval(firstRange, secondRange) == null) {
             intervalsArray = new Range[2];
@@ -78,6 +86,30 @@ public class Range {
             }
 
             intervalsArray[0] = intervalsIntersection;
+        }
+
+        return intervalsArray;
+    }
+
+    public Range[] getIntervalsDifference(Range firstRange, Range secondRange) {
+        Range intervalsDifference;
+
+        if (firstRange.isInside(secondRange.getFrom()) && firstRange.isInside(secondRange.getTo())) {
+            intervalsArray = new Range[1];
+            intervalsDifference = new Range(firstRange.getFrom(), firstRange.getTo());
+            intervalsArray[0] = intervalsDifference;
+        } else if (secondRange.isInside(firstRange.getFrom()) && secondRange.isInside(firstRange.getTo())) {
+            intervalsArray = new Range[1];
+            intervalsDifference = new Range(secondRange.getFrom(), secondRange.getTo());
+            intervalsArray[0] = intervalsDifference;
+        } else if ((firstRange.getFrom() == secondRange.getFrom()) && (firstRange.getTo() == secondRange.getTo())) {
+            intervalsArray = new Range[0];
+            intervalsDifference = null;
+            intervalsArray = null;
+        } else {
+            intervalsArray = new Range[2];
+            intervalsArray[0] = new Range(firstRange.getFrom(), firstRange.getTo());
+            intervalsArray[1] = new Range(secondRange.getFrom(), secondRange.getTo());
         }
 
         return intervalsArray;
