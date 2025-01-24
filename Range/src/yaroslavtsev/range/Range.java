@@ -68,14 +68,16 @@ public class Range {
                 } else {
                     intervalsIntersection = new Range(firstRange.getFrom(), secondRange.getTo());
                 }
-                intervalsArray[0] = intervalsIntersection;
-            } else if (firstRange.getTo() >= secondRange.getTo()) {
-                intervalsIntersection = new Range(secondRange.getFrom(), firstRange.getTo());
-                intervalsArray[0] = intervalsIntersection;
+
             } else {
-                intervalsIntersection = new Range(secondRange.getFrom(), secondRange.getTo());
-                intervalsArray[0] = intervalsIntersection;
+                if (firstRange.getTo() > secondRange.getTo()) {
+                    intervalsIntersection = new Range(secondRange.getFrom(), firstRange.getTo());
+                } else {
+                    intervalsIntersection = new Range(secondRange.getFrom(), secondRange.getTo());
+                }
             }
+
+            intervalsArray[0] = intervalsIntersection;
         }
 
         return intervalsArray;
