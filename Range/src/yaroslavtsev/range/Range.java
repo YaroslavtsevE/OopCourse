@@ -51,7 +51,7 @@ public class Range {
             intersectionIntervalFrom = secondRange.getFrom();
             intersectionIntervalTo = secondRange.getTo();
             intersectionInterval = new Range(intersectionIntervalFrom, intersectionIntervalTo);
-        } else if (firstRange.isInside(secondRange.getFrom()) && firstRange.isInside(secondRange.getTo())) {
+        } else if (secondRange.isInside(firstRange.getFrom()) && secondRange.isInside(firstRange.getTo())) {
             intersectionIntervalFrom = firstRange.getFrom();
             intersectionIntervalTo = firstRange.getTo();
             intersectionInterval = new Range(intersectionIntervalFrom, intersectionIntervalTo);
@@ -94,22 +94,39 @@ public class Range {
     public Range[] getIntervalsDifference(Range firstRange, Range secondRange) {
         Range intervalsDifference;
 
-        if (firstRange.isInside(secondRange.getFrom()) && firstRange.isInside(secondRange.getTo())) {
-            intervalsArray = new Range[1];
-            intervalsDifference = new Range(firstRange.getFrom(), firstRange.getTo());
-            intervalsArray[0] = intervalsDifference;
-        } else if (secondRange.isInside(firstRange.getFrom()) && secondRange.isInside(firstRange.getTo())) {
-            intervalsArray = new Range[1];
-            intervalsDifference = new Range(secondRange.getFrom(), secondRange.getTo());
-            intervalsArray[0] = intervalsDifference;
+        if ((firstRange.isInside(secondRange.getFrom()) && firstRange.isInside(secondRange.getTo())) && ((secondRange.getFrom() != firstRange.getFrom()) && (secondRange.getTo() != firstRange.getTo()))) {
+            intervalsArray = new Range[2];
+            intervalsArray[0] = new Range(firstRange.getFrom(), secondRange.getFrom());
+            intervalsArray[1] = new Range(secondRange.getTo(), firstRange.getTo());
+        } else if (firstRange.isInside(secondRange.getFrom())) {
+            if (secondRange.getTo() == firstRange.getTo()) {
+                intervalsArray = new Range[1];
+                intervalsDifference = new Range(firstRange.getFrom(), secondRange.getFrom());
+                intervalsArray[0] = intervalsDifference;
+            } else {
+                intervalsArray = new Range[1];
+                intervalsDifference = new Range(secondRange.getTo(), firstRange.getTo());
+                intervalsArray[0] = intervalsDifference;
+            }
+
+        } else if (firstRange.isInside(secondRange.getTo())) {
+            if (secondRange.getFrom() == firstRange.getFrom()) {
+                intervalsArray = new Range[1];
+                intervalsDifference = new Range(secondRange.getTo(), firstRange.getTo());
+                intervalsArray[0] = intervalsDifference;
+            } else {
+                intervalsArray = new Range[0];
+                intervalsDifference = null;
+                intervalsArray = null;
+            }
+
         } else if ((firstRange.getFrom() == secondRange.getFrom()) && (firstRange.getTo() == secondRange.getTo())) {
             intervalsArray = new Range[0];
             intervalsDifference = null;
             intervalsArray = null;
         } else {
-            intervalsArray = new Range[2];
-            intervalsArray[0] = new Range(firstRange.getFrom(), firstRange.getTo());
-            intervalsArray[1] = new Range(secondRange.getFrom(), secondRange.getTo());
+            intervalsArray = new Range[1];
+            intervalsArray[0] = new Range(firstRange.getFrom(), secondRange.getTo());
         }
 
         return intervalsArray;
